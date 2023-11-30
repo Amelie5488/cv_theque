@@ -42,6 +42,7 @@ class CV
         }
     }
 
+    //test avec table agence pour creation session avec mail et password 
     public function insertUser($User = [])
     {
         $sql = "INSERT into agence (email,password) values (:inputemail,:inputpassword)";
@@ -49,22 +50,77 @@ class CV
        $done->execute($User);
     }
 
+    //création candidat
     public function insertCandidat($candidat=[]){
 
-        $sql= "INSERT into tablename (Nom, Prenom, Age, Date_naissance, Adresse, Adresse_1, Code_postal, ville, tel_portable, tel_fixe, Email, Profil, Competence_1, Competence_2, Competence_3, Competence_4, Competence_5, Competence_6, Competence_7, Competence_8, Competence_9, Competence_10, Site_Web, Profil_Linkedin, Profil_Viadeo, Profil_facebook) values (:inputNom,:inputPrenom,:inputAge,:inputDate,:inputAdresse,:inputAdresse_1,:inputPostal,:inputVille,:inputPortable,:inputFixe,:inputMail,:inputProfil,:input1,:input2,:input3,:input4,:input5,:input6,:input7,:input8,:input9,:input10,:inputWeb,:inputLink,:inputVia,:inputFace)";
+        $sql= "INSERT into tablename (Nom, Prenom, Age, Date_naissance, Adresse, Adresse_1, Code_postal, ville, tel_portable, tel_fixe, Email, Profil, Site_Web, Profil_Linkedin, Profil_Viadeo, Profil_facebook) values (:inputNom,:inputPrenom,:inputAge,:inputDate,:inputAdresse,:inputAdresse_1,:inputPostal,:inputVille,:inputPortable,:inputFixe,:inputMail,:inputProfil,:inputWeb,:inputLink,:inputVia,:inputFace)";
         $done =  $this->bdd->prepare($sql);
         $done->execute($candidat);
     }
 
+    //recupere les compétences pour afficher les tags
     public function getCompetence(){
 
         $sql= "SELECT * FROM competences";
+        $done = $this->bdd->prepare($sql);
+        $done->execute();
+        //retourner toutes les valeurs de la table//
+        $return = $done->fetchAll();  
+        return $return;
+    }
+
+    //recupere tout de la table pricipal pour le bouton afficher tous les candidats 
+    public function getAll(){
+
+        $sql = "SELECT * FROM tablename";
+        $done = $this->bdd->prepare($sql);
+        $done->execute();
+        $return = $done->fetchAll();
+        return $return;
+
+    }
+
+    //recupere id max donc dernier id crée car lors de la creation de candidats si ils ont le meme nom alors toute la ligne est modifié par la nouvelle entrée 
+    public function getId(){
+
+        $sql = "SELECT MAX(Id) from tablename ";
         $done = $this->bdd->prepare($sql);
         $done->execute();
         $return = $done->fetchAll();
         return $return;
     }
 
+    // pour inserer les nouvelles compétence qui n'existe pas dans la table compétence
+    public function insertCompt($i,$a=[]){
+        $v = $i + 1 ;
+        $sql="UPDATE tablename SET Competence_$v = :inputTag$i where Id = :monID";
+        $done =  $this->bdd->prepare($sql);
+        $done->execute($a);
 
+    }
+    //si l'utilisateur ecrit une compétence qui n'est pas présente dans la table alors les nouvelles compétences doivent etre insérées dans la table 
+    public function insertTag($a =[]){
+        $sql = "INSERT into competences (Nom) values (:inputNom)";
+        $done = $this->bdd->prepare($sql);
+        $done->execute($a);
+    }
 
+    //Une fois que les nouvelles compétences ont été inséré je les récupere pour pouvoir les afficher en TAG 
+    public function getCompetences($param=[]){
+
+        $sql= "SELECT * FROM competences where Nom = :monNomCompt";
+        $done = $this->bdd->prepare($sql);
+        $done->execute($param);
+        //retourner toutes les valeurs de la table//
+        $return = $done->fetch();  
+        return $return;
+    }
+
+    public function deleteCandidat($suppr=[]){
+
+        $sql = "DELETE from tablename where Id = :inputId";
+        $done = $this->bdd->prepare($sql);
+        $done->execute($suppr);
+
+    }
 }
