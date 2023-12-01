@@ -6,13 +6,13 @@ $CV = new CV();
 $CV->connexion();
 
 // test table agence pour creation session avec mail et password 
-if (isset($_POST["sauce"])) {
-    if (empty($_POST["mail"] && $_POST["password"])) {
-        echo "vide";
-    } else {
-        $requestDone = $CV->insertUser(["inputemail" => $_POST["mail"], "inputpassword" => $_POST['password']]);
-    }
-}
+//if (isset($_POST["sauce"])) {
+   // if (empty($_POST["mail"] && $_POST["password"])) {
+       // echo "vide";
+   // } else {
+       // $requestDone = $CV->insertUser(["inputemail" => $_POST["mail"], "inputpassword" => $_POST['password']]);
+   // }
+//}
 
 if (isset($_POST["sauces"])) {
     //si les champ nom/prenom/mail/naissance/portable sont vide (empty)
@@ -74,7 +74,7 @@ if (isset($_POST["sauces"])) {
 </head>
 
 <body>
-    <form method="post">
+    <!--<form method="post">
         <div class="mb-3">
             <label for="" class="form-label">Email address</label>
             <input type="email" name="mail" class="form-control" id="Email">
@@ -82,7 +82,7 @@ if (isset($_POST["sauces"])) {
             <input type="password" name="password" class="form-control" id="password">
             <button type="submit" class="btn btn-primary" name="sauce">Primary</button>
         </div>
-    </form>
+    </form> -->
 
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Créer nouveau Candidat

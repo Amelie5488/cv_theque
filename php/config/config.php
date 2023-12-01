@@ -6,7 +6,7 @@ class CV
     private $host = "127.0.0.1";
     private $user = "root";
     private $password = "";
-    private $database = "cv_theq";
+    private $database = "cv_theque";
     private $charset = "utf8";
 
     private $bdd;
