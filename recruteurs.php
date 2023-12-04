@@ -4,7 +4,9 @@ require_once('php/config/config.php');
 
 $CV = new CV();
 $CV->connexion();
-
+if($_SESSION["role"]==0){
+    header("Location:candidats.php");
+}
 // test table agence pour creation session avec mail et password 
 //if (isset($_POST["sauce"])) {
    // if (empty($_POST["mail"] && $_POST["password"])) {
@@ -74,6 +76,34 @@ if (isset($_POST["sauces"])) {
 </head>
 
 <body>
+<header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="#">Navbar</a>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <?php if(isset($_SESSION['email']) == true){ ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="recruteurs.php">Recruteurs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="candidats.php">Candidats</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="deco.php">Déco</a>
+                        </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
     <!--<form method="post">
         <div class="mb-3">
             <label for="" class="form-label">Email address</label>
