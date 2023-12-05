@@ -53,7 +53,7 @@ class CV
     public function insertCandidat($candidat = [])
     {
 
-        $sql = "INSERT into tablename (Nom, Prenom, Age, Date_naissance, Adresse, Adresse_1, Code_postal, ville, tel_portable, tel_fixe, Email, Profil, Site_Web, Profil_Linkedin, Profil_Viadeo, Profil_facebook) values (:inputNom,:inputPrenom,:inputAge,:inputDate,:inputAdresse,:inputAdresse_1,:inputPostal,:inputVille,:inputPortable,:inputFixe,:inputMail,:inputProfil,:inputWeb,:inputLink,:inputVia,:inputFace)";
+        $sql = "INSERT into tablename (Nom, Prenom, Age, Date_naissance, Adresse, Adresse_1, Code_postal, ville, tel_portable, tel_fixe, Email, Profil, Site_Web, Profil_Linkedin, Profil_Viadeo, Profil_facebook, CV) values (:inputNom,:inputPrenom,:inputAge,:inputDate,:inputAdresse,:inputAdresse_1,:inputPostal,:inputVille,:inputPortable,:inputFixe,:inputMail,:inputProfil,:inputWeb,:inputLink,:inputVia,:inputFace, :inputCv)";
         $done =  $this->bdd->prepare($sql);
         $done->execute($candidat);
     }
@@ -162,5 +162,14 @@ class CV
         $return = $done->fetch();
         return $return;
     }
+
+    public function insertprofil($param = []){
+
+        $sql="UPDATE tablename SET Nom = :inputNom , Prenom = :inputPrenom, Date_naissance = :inputNaissance, Age = :inputAge, Adresse = :inputAdresse, Adresse_1 = :inputAdresse1, Code_postal = :inputPostal, ville = :inputVille, tel_portable = :inputPortable, tel_fixe = :inputFixe, Email = :inputMail where Id = :monId";
+        $done =  $this->bdd->prepare($sql);
+        $done->execute($param);
+
+    }
+
 }
 

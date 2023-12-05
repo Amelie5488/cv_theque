@@ -7,6 +7,7 @@ $CV->connexion();
 if (isset($_SESSION['email']) == true) {
     $result = $CV->gettout(["inputMail" => $_SESSION['email']]);
 }
+
 if (isset($_POST["sauce"])) {
     if (empty($_POST["mail"] && $_POST["password"])) {
         echo "vide";
@@ -24,23 +25,6 @@ if (isset($_POST["sauce"])) {
     }
 }
 
-if (isset($_POST["connect"])) {
-    if (empty($_POST["mailconnect"] && $_POST["passwordconnect"])) {
-        echo "vide";
-    } else {
-
-        $requestDone = $CV->gettout(["inputMail" => $_POST["mailconnect"]]);
-        if ($requestDone > 0) {
-            if (password_verify($_POST["passwordconnect"], $requestDone["Password"])) {
-                $_SESSION["email"] = $requestDone["Mail"];
-                $_SESSION["role"] = $requestDone["role"];
-            }
-        } else {
-            echo "les comptes sont pas bon kevin";
-        }
-    }
-}
-
 if (isset($_POST["sauces"])) {
     //si les champ nom/prenom/mail/naissance/portable sont vide (empty)
     if (empty($_POST["Nom1"] && $_POST["Prenom1"] && $_POST["mail1"] && $_POST["naissance1"] && $_POST["portable1"])) {
@@ -50,23 +34,66 @@ if (isset($_POST["sauces"])) {
     } else {
         //un minimum de 5 competences a entrer et un maximum de 10 
         if (count($_POST['tags_new']) >= 5 && count($_POST['tags_new']) <= 10) {
-            // création d'un candidat
-            $requestDone = $CV->insertCandidat(["inputNom" => $_POST["Nom1"], "inputPrenom" => $_POST["Prenom1"], "inputAge" => "", "inputDate" => $_POST["naissance1"], "inputAdresse" => $_POST["adresse"], "inputAdresse_1" => $_POST["adresse1"], "inputPostal" => $_POST["postal"], "inputVille" => $_POST["ville"], "inputPortable" => $_POST["portable1"], "inputFixe" => $_POST["fixe"], "inputMail" => $_POST["mail1"], "inputProfil" => "", "inputWeb" => "", "inputLink" => "", "inputVia" => "", "inputFace" => ""]);
+            $currentDirectory = getcwd();
+            $uploadDirectory = "uploads/";
 
-            //recupere l'id MAX qui correspond au dernier ID donné
-            $ID = $CV->getId();
-            $requestDone = $CV->insertId(["monMail" => $_SESSION["email"], "inputId" => $ID[0][0]]);
-            //on va boucler avec le nombre de TAG au total que nous avons 
-            for ($i = 0; $i < count($_POST['tags_new']); $i++) {
-                //création requete "UPDATE tablename SET Competence_$v = :inputTag$i where Id = :monID" => modif de la ligne -- id de la copetence est egal a l'id du tag -- ou l'id de la table est egal à l'ID de l'input
-                //nous avons mis deux parametres dans la fonction ici $i / ["inputTag$i" => $_POST['tags_new'][$i], "monID" => $ID[0][0]] inputTag coorespond a ce qui a été entré dans l'encart nommé compétence (ex:Anglais) => le post correspond a ce que je recupere de l'encart nommé compétence donc les deux veulent dire la meme chose sauf que pour une question de sécurité je dois le nommer differement dans ma requete sql (:input)
-                //$i correspond au nombre de fois que je vais boucler c'est a dire à mon nombre de compétences que j'ai au total            
-                $requestInput = $CV->insertCompt($i, ["inputTag$i" => $_POST['tags_new'][$i], "monID" => $ID[0][0]]);
-                //monNomCompt correspond au nom que j'entre dans tags_New (encart competences) fetch (dans la fonction) revoie 1 ou 0, 1 correspond a quelque chose d'existant donc si le nom tapé dans l'encart existe deja dans la table
-                if ($CV->getCompetences(["monNomCompt" => $_POST['tags_new'][$i]]) > 0) {
-                    //Alors je lance la requete insertTAG j'ajoute à ma table competence les nouveau nom de comptétence
+            $errors = []; // Store errors here
+
+            $fileExtensionsAllowed = ['pdf', 'docx']; // These will be the only file extensions allowed 
+
+            $filename   = uniqid() . "-" . time(); // 5dab1961e93a7-1571494241
+            $fileSize = $_FILES['the_file']['size'];
+            $fileType = pathinfo($_FILES["the_file"]["name"], PATHINFO_EXTENSION);
+            $basename   = $filename . "." . $fileType; // 5dab1961e93a7_1571494241.jpg
+            $fileTmpName  = $_FILES['the_file']['tmp_name'];
+            $fileExtension = explode('.', $basename);
+            $file_extension = end($fileExtension);
+
+            $uploadPath = $uploadDirectory . $basename;
+
+            if (!in_array($file_extension, $fileExtensionsAllowed)) {
+                $errors[] = "This file extension is not allowed. Please upload a JPEG or PNG file";
+            }
+
+            if ($fileSize > 4000000) {
+                $errors[] = "File exceeds maximum size (4MB)";
+            }
+
+            if (empty($errors)) {
+                $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
+
+                if ($didUpload) { 
+                    $today = getdate();
+                    $annee = explode('-', $_POST["naissance1"]);
+                    $firstString = $annee[0];
+                    $age = ($today['year'] - $firstString);
+                 
+                   
+                    // création d'un candidat
+                    $requestDone = $CV->insertCandidat(["inputNom" => $_POST["Nom1"], "inputPrenom" => $_POST["Prenom1"], "inputAge" => "$age", "inputDate" => $_POST["naissance1"], "inputAdresse" => $_POST["adresse"], "inputAdresse_1" => $_POST["adresse1"], "inputPostal" => $_POST["postal"], "inputVille" => $_POST["ville"], "inputPortable" => $_POST["portable1"], "inputFixe" => $_POST["fixe"], "inputMail" => $_POST["mail1"], "inputProfil" => "", "inputWeb" => "", "inputLink" => "", "inputVia" => "", "inputFace" => "", "inputCv" => $uploadPath]);
+
+                    //recupere l'id MAX qui correspond au dernier ID donné
+                    $ID = $CV->getId();
+                    $requestDone = $CV->insertId(["monMail" => $_SESSION["email"], "inputId" => $ID[0][0]]);
+                    //on va boucler avec le nombre de TAG au total que nous avons 
+                    for ($i = 0; $i < count($_POST['tags_new']); $i++) {
+                        //création requete "UPDATE tablename SET Competence_$v = :inputTag$i where Id = :monID" => modif de la ligne -- id de la copetence est egal a l'id du tag -- ou l'id de la table est egal à l'ID de l'input
+                        //nous avons mis deux parametres dans la fonction ici $i / ["inputTag$i" => $_POST['tags_new'][$i], "monID" => $ID[0][0]] inputTag coorespond a ce qui a été entré dans l'encart nommé compétence (ex:Anglais) => le post correspond a ce que je recupere de l'encart nommé compétence donc les deux veulent dire la meme chose sauf que pour une question de sécurité je dois le nommer differement dans ma requete sql (:input)
+                        //$i correspond au nombre de fois que je vais boucler c'est a dire à mon nombre de compétences que j'ai au total            
+                        $requestInput = $CV->insertCompt($i, ["inputTag$i" => $_POST['tags_new'][$i], "monID" => $ID[0][0]]);
+                        //monNomCompt correspond au nom que j'entre dans tags_New (encart competences) fetch (dans la fonction) revoie 1 ou 0, 1 correspond a quelque chose d'existant donc si le nom tapé dans l'encart existe deja dans la table
+                        if ($CV->getCompetences(["monNomCompt" => $_POST['tags_new'][$i]]) > 0) {
+                            //Alors je lance la requete insertTAG j'ajoute à ma table competence les nouveau nom de comptétence
+                        } else {
+                            $requestDone = $CV->insertTag(["inputNom" => $_POST['tags_new'][$i]]);
+                        }
+                    }
                 } else {
-                    $requestDone = $CV->insertTag(["inputNom" => $_POST['tags_new'][$i]]);
+                    echo "An error occurred. Please contact the administrator.";
+                }
+            } else {
+                foreach ($errors as $error) {
+                    echo $error . "These are the errors" . "\n";
                 }
             }
         } else {
@@ -83,7 +110,7 @@ if (isset($_POST["sauces"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
     <script type="module">
         import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
         Tags.init("select");
@@ -154,22 +181,6 @@ if (isset($_POST["sauces"])) {
         </div>
         </form>
     <?php } ?>
-
-
-    <?php if (isset($_SESSION['email']) == false) { ?>
-        <!-- Modal se connecter-->
-
-        <form method="post">
-            <div class="mb-3">
-                <label for="" class="form-label">Email address</label>
-                <input type="email" name="mailconnect" class="form-control" id="Email1">
-                <label for="" class="form-label">Password</label>
-                <input type="password" name="passwordconnect" class="form-control" id="password1">
-                <button type="submit" class="btn btn-primary" name="connect">Se connecter</button>
-            </div>
-        </form>
-    <?php } ?>
-
     <?php if (isset($_SESSION['email']) == true) {
         $result = $CV->gettout(["inputMail" => $_SESSION['email']]);
         if ($result["profil_id"] == 0) { ?>
@@ -179,49 +190,46 @@ if (isset($_POST["sauces"])) {
 
             <!-- Modal creation de formulaire-->
             <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel2">Création formulaire</h1>
+                            <h1 class="modal-title fs-5 w-100 text-center" id="exampleModalLabel2">Création de votre profil</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <form method="post">
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="modal-body">
+
                                 <div class="mb-3">
-                                    <label for="" class="form-label">Nom</label>
-                                    <input type="text" name="Nom1" class="form-control" id="Nom">
+                                    <div class="d-flex md-flex-row gap-3 mb-3">
+                                        <input placeholder="Nom" type="text" name="Nom1" class="form-control" id="Nom">
+                                        <input placeholder="Prénom" type="text" name="Prenom1" class="form-control" id="Prenom">
+                                    </div>
 
-                                    <label for="" class="form-label">Prénom</label>
-                                    <input type="text" name="Prenom1" class="form-control" id="Prenom">
+                                    <input placeholder="Email" type="email" name="mail1" class="form-control mb-3" id="Email1">
 
-                                    <label for="" class="form-label">E-mail</label>
-                                    <input type="email" name="mail1" class="form-control" id="Email1">
+                                    <div class="d-flex md-flex-row gap-3 mb-3">
+                                        <input placeholder="Tel Fixe" type="tel" name="fixe" class="form-control" id="fixe">
+                                        <input placeholder="Tel Portable" type="tel" name="portable1" class="form-control" id="portable">
+                                    </div>
 
-                                    <label for="" class="form-label">Telephone Fixe</label>
-                                    <input type="tel" name="fixe" class="form-control" id="fixe">
+                                    <input placeholder="Date de Naissance" type="date" name="naissance1" class="form-control mb-3" id="naissance">
 
-                                    <label for="" class="form-label">Telephone Portable</label>
-                                    <input type="tel" name="portable1" class="form-control" id="portable">
+                                    <div class="d-flex md-flex-row gap-3 mb-3">
+                                        <input placeholder="Adresse" type="text" name="adresse" class="form-control" id="adresse">
+                                        <input placeholder="Complément d'adresse" type="text" name="adresse1" class="form-control" id="adresse1">
+                                    </div>
 
-                                    <label for="" class="form-label">Date de naissance</label>
-                                    <input type="date" name="naissance1" class="form-control" id="naissance">
+                                    <div class="d-flex md-flex-row gap-3 mb-3">
+                                        <input placeholder="Code Postal" type="text" name="postal" class="form-control" id="postal">
+                                        <input placeholder="Ville" type="text" name="ville" class="form-control" id="ville">
+                                    </div>
 
-                                    <label for="" class="form-label">Adresse</label>
-                                    <input type="text" name="adresse" class="form-control" id="adresse">
-
-                                    <label for="" class="form-label">Complement d'adresse</label>
-                                    <input type="text" name="adresse1" class="form-control" id="adresse1">
-
-                                    <label for="" class="form-label">Code Postal</label>
-                                    <input type="text" name="postal" class="form-control" id="postal">
-
-                                    <label for="" class="form-label">Ville</label>
-                                    <input type="text" name="ville" class="form-control" id="ville">
+                                    <input placeholder="CV" type="file" name="the_file" class="form-control mb-3" id="fileToUpload">
 
                                     <div class="row mb-3 g-3">
                                         <div class="col-md-4 w-100">
-                                            <label for="validationTagsNew" class="form-label">Compétences</label>
-                                            <select class="form-select" id="validationTagsNew" name="tags_new[]" multiple data-allow-new="true">
+
+                                            <select placeholder="Compétences" class="form-select" id="validationTagsNew" name="tags_new[]" multiple data-allow-new="true">
                                                 <?php foreach ($CV->getCompetence() as $row) { ?>
                                                     <option value="<?php print $row['Nom']; ?>"><?php print $row['Nom']; ?></option>
                                                 <?php } ?>
@@ -234,14 +242,15 @@ if (isset($_POST["sauces"])) {
 
                                 </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" name="sauces">Créer</button>
-                        </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="sauces">Créer</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            </form>
+
     <?php }
     } ?>
 
@@ -250,7 +259,7 @@ if (isset($_POST["sauces"])) {
         if ($result["profil_id"] > 0) {
     ?>
 
-            <section class="d-flex flex-column align-items-center justify-content-center m-auto">
+            <section class="d-flex flex-row align-items-center justify-content-center m-auto">
                 <?php
                 $touslescandidats = $CV->getmonprofil(["inputMail" => $_SESSION["email"]]); ?>
 
@@ -272,7 +281,8 @@ if (isset($_POST["sauces"])) {
                     <p>Email : <?= $touslescandidats["Email"] ?></p>
                     <p>Domaine : <?= $touslescandidats["Profil"] ?></p>
 
-                    <p>Compétences : <span class="badge bg-info text-dark"><?= $touslescandidats["Competence_1"] ?></span>
+
+                    <p class="w-75">Compétences : <span class="badge bg-info text-dark"><?= $touslescandidats["Competence_1"] ?></span>
                         <span class="badge bg-info text-dark"><?= $touslescandidats["Competence_2"] ?></span>
                         <span class="badge bg-info text-dark"><?= $touslescandidats["Competence_3"] ?></span>
                         <span class="badge bg-info text-dark"><?= $touslescandidats["Competence_4"] ?></span>
@@ -282,12 +292,17 @@ if (isset($_POST["sauces"])) {
                         <span class="badge bg-info text-dark"><?= $touslescandidats["Competence_8"] ?></span>
                         <span class="badge bg-info text-dark"><?= $touslescandidats["Competence_9"] ?></span>
                         <span class="badge bg-info text-dark"><?= $touslescandidats["Competence_10"] ?></span>
+
                     </p>
 
-                    <p>Site web personnel : <a href="<?= $touslescandidats["Site_Web"] ?>"><?= $touslescandidats["Site_Web"] ?></a></p>
-                    <p>Profil Linkedin : <a href="<?= $touslescandidats["Profil_Linkedin"] ?>"><?= $touslescandidats["Profil_Linkedin"] ?></a></p>
-                    <p>Profil Viadéo : <a href="<?= $touslescandidats["Profil_Viadeo"] ?>"><?= $touslescandidats["Profil_Viadeo"] ?></a></p>
-                    <p>Profil facebook : <a href="<?= $touslescandidats["Profil_facebook"] ?>"><?= $touslescandidats["Profil_facebook"] ?></a></p>
+                    <p><a href="<?= $touslescandidats["Site_Web"] ?>">Site web personnel</a></p>
+                    <p><a href="<?= $touslescandidats["Profil_Linkedin"] ?>">Profil Linkedin</a></p>
+                    <p><a href="<?= $touslescandidats["Profil_Viadeo"] ?>">Profil Viadéo</a></p>
+                    <p><a href="<?= $touslescandidats["Profil_facebook"] ?>">Profil facebook</a></p>
+                </article>
+                <article>
+                    <p><embed src=<?= $touslescandidats["CV"] ?> width=800 height=800 type='application/pdf' />
+                    </p>
                 </article>
             </section>
     <?php }
