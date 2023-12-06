@@ -42,6 +42,7 @@ class CV
         }
     }
 
+    // creation d'un compte sur l'index 
     public function insertUser($b = [])
     {
         $sql = "INSERT into compte (Mail,Password,profil_id) values (:inputemail,:inputpassword,:inputId)";
@@ -49,7 +50,7 @@ class CV
         $done->execute($b);
     }
 
-    //création candidat
+    //création d'un candidat sur la page recruteur
     public function insertCandidat($candidat = [])
     {
 
@@ -82,7 +83,8 @@ class CV
     }
 
     //recupere tout de la table pricipal pour le bouton afficher tous les candidats 
-    public function getTable($param=[])
+    //utilise aussi pour la connection du compte 
+    public function getTable($param = [])
     {
 
         $sql = "SELECT * FROM tablename where Email = :inputEmail";
@@ -129,7 +131,7 @@ class CV
         $return = $done->fetch();
         return $return;
     }
-
+    // supprimer un candidat sur la page recruteur 
     public function deleteCandidat($suppr = [])
     {
 
@@ -138,6 +140,7 @@ class CV
         $done->execute($suppr);
     }
 
+    //pour etablir la connection 
     public function gettout($connect = [])
     {
 
@@ -148,28 +151,52 @@ class CV
         return $return;
     }
 
-    public function insertId($param = []){
-    $sql = "UPDATE compte SET profil_id = :inputId where Mail = :monMail";
-    $done =  $this->bdd->prepare($sql);
+    // quand je creer un compte avec une adresse mail j'ai un Id qui se creer aussi 
+    // utiliser sur la page candidat 
+    public function insertId($param = [])
+    {
+        $sql = "UPDATE compte SET profil_id = :inputId where Mail = :monMail";
+        $done =  $this->bdd->prepare($sql);
         $done->execute($param);
-
     }
 
-    public function getmonprofil($param=[]){
-        $sql="SELECT * from compte inner join tablename on (tablename.Id=compte.profil_id) where Mail = :inputMail";
+    // afficher toute les infos de mon profil sur la page candidat 
+    public function getmonprofil($param = [])
+    {
+        $sql = "SELECT * from compte inner join tablename on (tablename.Id=compte.profil_id) where Mail = :inputMail";
         $done = $this->bdd->prepare($sql);
         $done->execute($param);
         $return = $done->fetch();
         return $return;
     }
 
-    public function insertprofil($param = []){
+    // pour modifier le candidat dans la page recruteur
+    public function insertprofil($param = [])
+    {
 
-        $sql="UPDATE tablename SET Nom = :inputNom , Prenom = :inputPrenom, Date_naissance = :inputNaissance, Age = :inputAge, Adresse = :inputAdresse, Adresse_1 = :inputAdresse1, Code_postal = :inputPostal, ville = :inputVille, tel_portable = :inputPortable, tel_fixe = :inputFixe, Email = :inputMail where Id = :monId";
+        $sql = "UPDATE tablename SET Nom = :inputNom , Prenom = :inputPrenom, Date_naissance = :inputNaissance, Age = :inputAge, Adresse = :inputAdresse, Adresse_1 = :inputAdresse1, Code_postal = :inputPostal, ville = :inputVille, tel_portable = :inputPortable, tel_fixe = :inputFixe, Email = :inputMail, Profil = :inputProfil where Id = :monId";
         $done =  $this->bdd->prepare($sql);
         $done->execute($param);
+    }
+    // pour modifier le candidat dans la page recruteur
+    public function insertprofil1($param = [])
+    {
 
+        $sql = "UPDATE tablename SET Nom = :inputNom , Prenom = :inputPrenom, Date_naissance = :inputNaissance, Age = :inputAge, Adresse = :inputAdresse, Adresse_1 = :inputAdresse1, Code_postal = :inputPostal, ville = :inputVille, tel_portable = :inputPortable, tel_fixe = :inputFixe, Email = :inputMail, Profil = :inputProfil, Site_Web = :inputWeb, Profil_Linkedin = :inputLink, Profil_Viadeo = :inputVid, Profil_facebook = :inputFB where Id = :monId";
+        $done =  $this->bdd->prepare($sql);
+        $done->execute($param);
+    }
+    // pour modifier le candidat dans la page recruteur
+    public function updateCV($param = [])
+    {
+
+        $sql = "UPDATE tablename SET CV = :inputCV where Id = :monId";
+        $done =  $this->bdd->prepare($sql);
+        $done->execute($param);
     }
 
+    public function deco()
+    {
+        $this->bdd = NULL;
+    }
 }
-

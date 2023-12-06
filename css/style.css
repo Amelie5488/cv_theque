@@ -17,3 +17,9 @@ img{
     border-radius: 30px;
     box-shadow: 60px -16px rgb(51, 53, 53);
     }
+
+    details > summary {
+
+        list-style: none;
+        
+      }

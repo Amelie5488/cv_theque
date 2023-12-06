@@ -1,7 +1,9 @@
 <?php
+//Démarre une nouvelle session 
 session_start();
 require_once('php/config/config.php');
 
+// connection a la bbd
 $CV = new CV();
 $CV->connexion();
 if ($_SESSION["role"] == 0) {
@@ -64,6 +66,7 @@ if (isset($_POST["sauces"])) {
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 
     <script type="module">
+        //TAG
         import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
         Tags.init("select");
     </script>
@@ -73,7 +76,7 @@ if (isset($_POST["sauces"])) {
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: hsla(0, 0%, 94%, 80%);">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -82,24 +85,25 @@ if (isset($_POST["sauces"])) {
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row justify-content-between w-100">
                         <section class="d-flex flex-row ">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.php">Accueil</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="index.php">Accueil</a>
+                            </li>
 
-                        <?php if (isset($_SESSION['email']) == true) { ?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="recruteurs.php">Recruteurs</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="candidats.php">Candidats</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="deco.php">Déco</a>
-                            </li>
-                        <?php } ?>
-                    </section>
+                            <!-- si je suis connécte a une session alors j'ai acces à recruteurs(tout depend du role)/candidats/deco-->
+                            <?php if (isset($_SESSION['email']) == true) { ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="recruteurs.php">Recruteurs</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="candidats.php">Candidats</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="deco.php">Déco</a>
+                                </li>
+                            <?php } ?>
+                        </section>
                         <li class="nav-item">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
                                 Créer nouveau Candidat
                             </button>
                         </li>
@@ -109,72 +113,69 @@ if (isset($_POST["sauces"])) {
         </nav>
     </header>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Création Candidat</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="post">
-                        <div class="mb-3">
-                            <label for="" class="form-label">Nom</label>
-                            <input type="text" name="Nom" class="form-control" id="Nom">
+    <!-- Modal formulaire creation de candidat-->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 w-100 text-center" id="exampleModalLabel2">Création de votre profil</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="modal-body">
 
-                            <label for="" class="form-label">Prénom</label>
-                            <input type="text" name="Prenom" class="form-control" id="Prenom">
+                                <div class="mb-3">
+                                    <div class="d-flex md-flex-row gap-3 mb-3">
+                                        <input placeholder="Nom" type="text" name="Nom1" class="form-control" id="Nom">
+                                        <input placeholder="Prénom" type="text" name="Prenom1" class="form-control" id="Prenom">
+                                    </div>
 
-                            <label for="" class="form-label">E-mail</label>
-                            <input type="email" name="mail" class="form-control" id="Email1">
+                                    <input placeholder="Email" type="email" name="mail1" class="form-control mb-3" id="Email1">
 
-                            <label for="" class="form-label">Telephone Fixe</label>
-                            <input type="tel" name="fixe" class="form-control" id="fixe">
+                                    <div class="d-flex md-flex-row gap-3 mb-3">
+                                        <input placeholder="Tel Fixe" type="tel" name="fixe" class="form-control" id="fixe">
+                                        <input placeholder="Tel Portable" type="tel" name="portable1" class="form-control" id="portable">
+                                    </div>
 
-                            <label for="" class="form-label">Telephone Portable</label>
-                            <input type="tel" name="portable" class="form-control" id="portable">
+                                    <input placeholder="Date de Naissance" type="date" name="naissance1" class="form-control mb-3" id="naissance">
 
-                            <label for="" class="form-label">Date de naissance</label>
-                            <input type="date" name="naissance" class="form-control" id="naissance">
+                                    <div class="d-flex md-flex-row gap-3 mb-3">
+                                        <input placeholder="Adresse" type="text" name="adresse" class="form-control" id="adresse">
+                                        <input placeholder="Complément d'adresse" type="text" name="adresse1" class="form-control" id="adresse1">
+                                    </div>
 
-                            <label for="" class="form-label">Adresse</label>
-                            <input type="text" name="adresse" class="form-control" id="adresse">
+                                    <div class="d-flex md-flex-row gap-3 mb-3">
+                                        <input placeholder="Code Postal" type="text" name="postal" class="form-control" id="postal">
+                                        <input placeholder="Ville" type="text" name="ville" class="form-control" id="ville">
+                                    </div>
 
-                            <label for="" class="form-label">Complement d'adresse</label>
-                            <input type="text" name="adresse1" class="form-control" id="adresse1">
+                                    <input placeholder="CV" type="file" name="the_file" class="form-control mb-3" id="fileToUpload">
 
-                            <label for="" class="form-label">Code Postal</label>
-                            <input type="text" name="postal" class="form-control" id="postal">
+                                    <div class="row mb-3 g-3">
+                                        <div class="col-md-4 w-100">
 
-                            <label for="" class="form-label">Ville</label>
-                            <input type="text" name="ville" class="form-control" id="ville">
-
-                            <div class="row mb-3 g-3">
-                                <div class="col-md-4 w-100">
-                                    <label for="validationTagsNew" class="form-label">Compétences</label>
-                                    <select class="form-select" id="validationTagsNew" name="tags_new[]" multiple data-allow-new="true">
-                                        <?php foreach ($CV->getCompetence() as $row) { ?>
-                                            <option value="<?php print $row['Nom']; ?>"><?php print $row['Nom']; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <div class="invalid-feedback">Please select a valid tag.</div>
-                                    <small class="d-flex justify-content-center text-muted opacity-25">Séléctionner vos compétences ou ajoutez les.</small>
+                                            <select placeholder="Compétences" class="form-select" id="validationTagsNew" name="tags_new[]" multiple data-allow-new="true">
+                                                <!-- aller chercher les competence dans la BDD competence -->
+                                                <?php foreach ($CV->getCompetence() as $row) { ?>
+                                                    <option value="<?php print $row['Nom']; ?>"><?php print $row['Nom']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                            <div class="invalid-feedback">Please select a valid tag.</div>
+                                            <small class="d-flex justify-content-center text-muted opacity-25">Séléctionner vos compétences ou ajoutez les.</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-
-                        </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" name="sauces">Créer mon profil</button>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="sauces">Créer</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    </form>
+
     <section class="m-auto" style="width : 90%">
+    <!-- tableau pour afficher tous les candidats -->
         <table id="myTable" class="table table-hover">
             <thead class="table-dark">
                 <th></th>
@@ -198,18 +199,24 @@ if (isset($_POST["sauces"])) {
             </thead>
             <tbody>
                 <?php
+                // recupere tous les candidats 
                 $touslescandidats = $CV->getAll();
                 foreach ($touslescandidats as $row) {
+                    // associer chaque bouton supprimer avec l'ID du candidat // sinon supprime toute la table
                     if (isset($_POST["Supprimer" . $row['Id']])) {
+                        // lancer la requete pour supprimer un candidat de la table en fonction de son ID
                         $SuppDone = $CV->deleteCandidat(["inputId" => $row['Id']]);
                     }
 
+                    // associer le bouton sauces avec l'ID du candidats // sinon modifie toute la table 
                     if (isset($_POST["sauces_" .  $row['Id']])) {
+                        // calcul de l'age 
                         $today = getdate();
                         $annee = explode('-', $_POST["naissance_" . $row['Id']]);
                         $firstString = $annee[0];
                         $age = ($today['year'] - $firstString);
-                        $profil_Update = $CV->insertprofil(["inputNom" => $_POST["Nom_" . $row['Id']], "inputPrenom" => $_POST["Prenom_" . $row['Id']], "inputNaissance" => $_POST["naissance_" . $row['Id']], "inputAge" => $age, "inputAdresse" => $_POST["adresse_" . $row['Id']], "inputAdresse1" => $_POST["adresse1_" . $row['Id']], "inputPostal" => $_POST["postal_" . $row['Id']], "inputVille" => $_POST["ville_" . $row['Id']], "inputPortable" => $_POST["portable_" . $row['Id']], "inputFixe" => $_POST["fixe_" . $row['Id']], "inputMail" => $_POST["Email_" . $row['Id']], "monId" => $row['Id']]);
+                        // fonction qui permet de modifier les candidats 
+                        $profil_Update = $CV->insertprofil(["inputNom" => $_POST["Nom_" . $row['Id']], "inputPrenom" => $_POST["Prenom_" . $row['Id']], "inputNaissance" => $_POST["naissance_" . $row['Id']], "inputAge" => $age, "inputAdresse" => $_POST["adresse_" . $row['Id']], "inputAdresse1" => $_POST["adresse1_" . $row['Id']], "inputPostal" => $_POST["postal_" . $row['Id']], "inputVille" => $_POST["ville_" . $row['Id']], "inputPortable" => $_POST["portable_" . $row['Id']], "inputFixe" => $_POST["fixe_" . $row['Id']], "inputMail" => $_POST["Email_" . $row['Id']],"inputProfil"=>"", "monId" => $row['Id']]);
                     }
                 }
                 foreach ($touslescandidats as $row) {
@@ -252,7 +259,7 @@ if (isset($_POST["sauces"])) {
                         <td><?= $row["Profil_Viadeo"] ?></td>
                         <td><?= $row["Profil_facebook"] ?></td>
                     </tr>
-                    <!-- Modal creation de formulaire-->
+                    <!-- Modal pour modifier chaque candidiat -->
                     <div class="modal fade" id="exampleModal_<?= $row['Id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel_<?= $row['Id'] ?>" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
