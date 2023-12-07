@@ -60,6 +60,7 @@ if (isset($_POST["sauces"])) {
                     $requestDone = $CV->insertTag(["inputNom" => $_POST['tags_new'][$i]]);
                 }
             }
+            $succes ="Bienvenue chez Germa-Karrière, votre compte à bien été créé pour gérer votre carrière"; 
         } else {
             echo "Entrer au moins 5 compétences et au maximum 10";
         }
