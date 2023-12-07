@@ -112,9 +112,9 @@ if (isset($_POST["sauces"])) {
                         </li>
                         <?php if (isset($_SESSION['email']) == true) { ?>
                             <?php if ($_SESSION['role'] == 1) { ?>
-                            <li>
-                                <a href="recruteurs.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Recruteurs</a>
-                            </li>
+                                <li>
+                                    <a href="recruteurs.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Recruteurs</a>
+                                </li>
                             <?php } ?>
                             <li>
                                 <a href="candidats.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Candidats</a>
@@ -127,7 +127,7 @@ if (isset($_POST["sauces"])) {
                 </div>
                 <div class="hidden w-full md:block md:w-auto" id="navbar-default">
                     <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
-                    <?php if (isset($_SESSION['email']) == true) { ?>
+                        <?php if (isset($_SESSION['email']) == true) { ?>
                             <li class="flex items-center">
                                 <a class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"><?= $_SESSION['email']; ?></a>
                             </li>
@@ -244,7 +244,7 @@ if (isset($_POST["sauces"])) {
     <main class="my-20 min-h-[80vh]">
         <section class="w-[90%] mx-auto mb-10 bg-white/90 p-10">
             <!-- tableau pour afficher tous les candidats -->
-            <table id="myTable">
+            <table id="myTable" class="table-auto border-separate">
                 <thead class="bg-black text-white">
                     <th></th>
                     <th>Nom</th>
@@ -252,7 +252,6 @@ if (isset($_POST["sauces"])) {
                     <th>Age</th>
                     <th>Date_naissance</th>
                     <th>Adresse</th>
-
                     <th>Code_postal</th>
                     <th>ville</th>
                     <th>tel_portable</th>
@@ -290,41 +289,37 @@ if (isset($_POST["sauces"])) {
                     foreach ($touslescandidats as $row) {
 
                     ?>
-                        <tr class="border-b">
-                            <td>
+                        <tr>
+                            <td class="border-b border-black/50"> 
                                 <button type="button" class="w-full text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900" name="Modif <?= $row["Id"]; ?>" data-modal-target="authentication-modal<?php print $row['Id'] ?>" data-modal-toggle="authentication-modal<?php print $row['Id'] ?>"> Modifier</button>
                                 <form method="post">
                                     <button type="submit" class="w-full text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900" name="Supprimer<?= $row["Id"]; ?>"> Supprimer</button>
                                 </form>
                             </td>
-                            <td><?= strtoupper($row["Nom"]) ?></td>
-                            <td><?= $row["Prenom"] ?></td>
-                            <td><?= $row["Age"] ?></td>
-                            <td><?= $row["Date_naissance"] ?></td>
-                            <td><?= $row["Adresse"] ?> <?= $row["Adresse_1"] ?></td>
-                            <td><?= $row["Code_postal"] ?></td>
-                            <td><?= $row["ville"] ?></td>
-                            <td><?= $row["tel_portable"] ?></td>
-                            <td><?= $row["tel_fixe"] ?></td>
-                            <td><?= $row["Email"] ?></td>
-                            <td><?= $row["Profil"] ?></td>
-                            <td>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_1"] ?></span>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_2"] ?></span>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_3"] ?></span>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_4"] ?></span>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_5"] ?></span>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_6"] ?></span>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_7"] ?></span>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_8"] ?></span>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_9"] ?></span>
-                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_10"] ?></span>
-
+                            <td class="border-b border-black/50"> <?= strtoupper($row["Nom"]) ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Prenom"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Age"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Date_naissance"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Adresse"] ?> <?= $row["Adresse_1"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Code_postal"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["ville"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["tel_portable"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["tel_fixe"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Email"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Profil"] ?></td>
+                            <td class="border-b border-black/50"> 
+                                <?php
+                                for ($i = 0; $i < 10; $i++) {
+                                    $v = $i + 1;
+                                    if ($row["Competence_$v"] != "") { ?>
+                                        <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"><?php print $row["Competence_$v"] ?></span>
+                                <?php }
+                                } ?>
                             </td>
-                            <td><?= $row["Site_Web"] ?></td>
-                            <td><?= $row["Profil_Linkedin"] ?></td>
-                            <td><?= $row["Profil_Viadeo"] ?></td>
-                            <td><?= $row["Profil_facebook"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Site_Web"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Profil_Linkedin"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Profil_Viadeo"] ?></td>
+                            <td class="border-b border-black/50"> <?= $row["Profil_facebook"] ?></td>
                         </tr>
                         <!-- Modal pour modifier chaque candidiat -->
 
@@ -428,7 +423,7 @@ if (isset($_POST["sauces"])) {
         </section>
     </main>
 
-    <?php include('footer.php');?>
+    <?php include('footer.php'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     <script>
