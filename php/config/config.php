@@ -108,7 +108,7 @@ class CV
     public function insertCompt($i, $a = [])
     {
         $v = $i + 1;
-        $sql = "UPDATE tablename SET Competence_$v = :inputTag$i where Id = :monID";
+        $sql = "UPDATE tablename SET Competence_$v = :inputTag where Id = :monID";
         $done =  $this->bdd->prepare($sql);
         $done->execute($a);
     }

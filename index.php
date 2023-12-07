@@ -2,11 +2,14 @@
 //Démarre une nouvelle session 
 session_start();
 require_once('php/config/config.php');
-
 // connection a la bbd
 $CV = new CV();
 $CV->connexion();
-
+if (isset($_SESSION['email']) == true && isset($_SESSION['role']) == 0) {
+    header('location: candidats.php');
+} elseif (isset($_SESSION['email']) == true && isset($_SESSION['role']) == 1) {
+    header('location: recruteurs.php');
+}
 // variable pour les alerte lors de la connection 
 $error = "";
 $succes = "";
@@ -29,7 +32,13 @@ if (isset($_POST["connect"])) {
                 $_SESSION["email"] = $requestDone["Mail"];
                 //le role de la session est identique au role de la BDD
                 $_SESSION["role"] = $requestDone["role"];
-                $CV-> deco();
+
+                if (isset($_SESSION['email']) == true && isset($_SESSION['role']) == 0) {
+                    header('location: candidats.php');
+                } elseif (isset($_SESSION['email']) == true && isset($_SESSION['role']) == 1) {
+                    header('location: recruteurs.php');
+                }
+                $CV->deco();
             }
         } else {
             //sinon message d'erreur 
@@ -71,11 +80,11 @@ if (isset($_POST["creation"])) {
                         if ($result > 0) {
                             $requestDone = $CV->insertUser(["inputemail" => $email, "inputpassword" => $passHash, "inputId" => $result['Id']]);
                             $succes = "Création de votre compte validé";
-                            $CV-> deco();
+                            $CV->deco();
                         } else {
                             $requestDone = $CV->insertUser(["inputemail" => $email, "inputpassword" => $passHash, "inputId" => '0']);
                             $succes = "Création de votre compte validé";
-                            $CV-> deco();
+                            $CV->deco();
                         }
                     } else {
                         $error = "Les comptes sont pas bon kévin";
@@ -100,47 +109,145 @@ if (isset($_POST["creation"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+    <script src="https://kit.fontawesome.com/f751d235a8.js" crossorigin="anonymous"></script>
     <title>Germa-karrière.com</title>
 </head>
 
 
 <body style="background: url('img/fond.jpg');background-size:cover; background-repeat: no-repeat; background-position: center;">
-    <header>
-        <!--navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: hsla(0, 0%, 94%, 80%);">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+    <header class="mb-10">
+        <nav class="bg-white/70 border-gray-200 dark:bg-gray-900">
+            <div class="w-[90%] flex flex-wrap items-center justify-between mx-auto p-4">
+                <a href="index.php" class="flex flex-row items-center gap-3">
+                    <i class="fa-solid fa-otter fa-2xl"></i>
+                    <span class="self-center text-2xl hidden lg:flex font-semibold whitespace-nowrap dark:text-white">Germa-Karrière</span>
+                </a>
+                <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+                    </svg>
                 </button>
-                <a class="navbar-brand" href="index.php">Germa-karrière.com</a>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.php">Accueil</a>
+                <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+                    <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
+                        <li>
+                            <a href="index.php" class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Accueil</a>
                         </li>
-                        <!-- si je suis connecté à une session alors je peux avoir acces au menu recruteurs(tout depend du role)/candidats/deco-->
                         <?php if (isset($_SESSION['email']) == true) { ?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="recruteurs.php">Recruteurs</a>
+                            <?php if ($_SESSION['role'] == 1) { ?>
+                                <li>
+                                    <a href="recruteurs.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Recruteurs</a>
+                                </li>
+                            <?php } ?>
+                            <li>
+                                <a href="candidats.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Candidats</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="candidats.php">Candidats</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="deco.php">Déco</a>
+                            <li>
+                                <a href="deco.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Déconnexion</a>
                             </li>
                         <?php } ?>
                     </ul>
                 </div>
+                <?php if (isset($_SESSION['email']) == true) { ?>
+                    <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+                        <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
+                            <li class="flex items-center">
+                                <a class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"><?= $_SESSION['email']; ?></a>
+                            </li>
+                        </ul>
+                    </div>
+                <?php } ?>
             </div>
         </nav>
     </header>
-    <main class="d-flex flex-row align-items-center w-100 bg-image">
-        <!-- Je le garde car c'est moi qui l'est fait mais Damien a pas voulu le garder !! 
+    <main class="min-h-[80vh] flex flex-col items-center justify-center w-full">
+        <section class="w-[65%]">
+            <?php include('alert.php'); ?>
+        </section>
+        <?php if (isset($_SESSION['email']) == false) { ?>
+            <section class="w-full">
+                <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:grid-cols-2 gap-8 lg:gap-16">
+                    <div class="flex flex-col justify-center">
+                        <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl dark:text-white">Germa-Karrière</h1>
+                        <p class="mb-6 text-lg font-normal text-white lg:text-xl dark:text-gray-400">Avec Germa-karrière, gère ta carrière !</p>
+                    </div>
+                    <div>
+                        <div class="w-full lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                                Se connecter à son espace
+                            </h2>
+                            <form class="mt-8 space-y-6" method="post">
+                                <div>
+                                    <input type="email" name="mailconnect" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required>
+                                </div>
+                                <div>
+                                    <input type="password" name="passwordconnect" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                </div>
+                                <button type="submit" name="connect" class="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Se connecter</button>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                    Pas encore inscrit ? <a class="text-blue-600 hover:underline dark:text-blue-500" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal">Créer un compte</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <!-- Main modal -->
+                <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div class="relative p-4 w-full max-w-md max-h-full">
+                        <!-- Modal content -->
+                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                            <!-- Modal header -->
+                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                    Créer votre espace
+                                </h3>
+                                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <!-- Modal body -->
+                            <div class="p-4 md:p-5">
+                                <form class="mt-8 space-y-6" method="post">
+                                    <div>
+                                        <input type="email" name="mailcreation" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required>
+                                    </div>
+                                    <div>
+                                        <input type="password" name="passwordcreation" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                    </div>
+                                    <div>
+                                        <input type="password" name="passwordconfirm" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                    </div>
+                                    <div class="g-recaptcha mb-3" data-sitekey="6Lcu3ycpAAAAANZEg1MkZYaFZNDAxHVejwtFsW_a"></div>
+                                    <button type="submit" name="creation" class="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Créer un compte</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        <?php } ?>
+    </main>
+
+    <?php include('footer.php'); ?>
+
+    <!-- <script src="js/toggle.js"></script> -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+
+</html>
+
+
+<!-- Je le garde car c'est moi qui l'est fait mais Damien a pas voulu le garder !! 
         Mais, vu qu'on se connect directement via l'index AUCUNE PUTAIN d'utilitée
             <section class="d-flex flex-row justify-content-around w-100">
             <a class="d-flex flex-column align-items-center" href="recruteurs.php"><img class="" src="img/recruteur.png">
@@ -150,109 +257,3 @@ if (isset($_POST["creation"])) {
                 <h2 class="pt-3">Espace candidats</h2>
             </a>
         </section> -->
-
-        <section class="d-flex flex-column flex-md-row justify-content-around align-items-center w-75 m-auto">
-            <!-- si je ne suis pas connecte a une session alors j'ai acces au champs de connection -->                
-            <?php if (isset($_SESSION['email']) == false) { ?>
-                <div class="p-4 shadow-4 rounded-3 w-50" id="login" style="background-color: hsla(0, 0%, 94%, 80%);">
-
-                <!-- code boostrap pour les icones des alertes -->
-                    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                        </symbol>
-                        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-                        </symbol>
-                        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                        </symbol>
-                    </svg>
-
-                    <!-- si il y a une erreur-->
-                    <?php if ($error) { ?>
-                        <!-- Alors msg d'alerte -->
-                        <div class="alert alert-danger d-flex align-items-center" role="alert">
-                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
-                                <use xlink:href="#exclamation-triangle-fill" />
-                            </svg>
-                            <div>
-                                <?= $error ?>
-                            </div>
-                        </div>
-                    <?php } ?>
-                    <!-- si il y a une erreur-->
-                    <?php if ($succes) { ?>
-                        <!-- Alors msg d'erreur -->
-                        <div class="alert alert-success d-flex align-items-center" role="alert">
-                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-                                <use xlink:href="#check-circle-fill" />
-                            </svg>
-                            <div>
-                                <?= $succes ?>
-                            </div>
-                        </div>
-                    <?php } ?>
-
-                    <!-- form pour se connecter -->            
-                    <h2 class="mb-4">Accéder à mon espace personnel</h2>
-                    <form method="post" class="w-100">
-                        <div class="mb-3">
-                            <label for="" class="form-label">Email address</label>
-                            <input type="email" name="mailconnect" class="form-control mb-4" id="Email">
-                            <label for="" class="form-label">Password</label>
-                            <input type="password" name="passwordconnect" class="form-control mb-4" id="password">
-                            <button type="submit" class="btn btn-primary w-25" name="connect">Se connecter</button>
-                        </div>
-                    </form>
-
-                    <!-- form pour se creer un compte -->
-                    <details>
-                        <summary class="mb-4 border border-primary rounded bg-primary text-light w-25 text-center" style="list-style: none; padding : 1%;">Créer mon compte</summary>
-                        <form method="post" class="w-100">
-                            <div class="mb-3">
-                                <label for="" class="form-label">Email address</label>
-                                <input type="email" name="mailcreation" class="form-control mb-4" id="Email1" require>
-                                <label for="" class="form-label">Password</label>
-                                <input type="password" name="passwordcreation" class="form-control mb-4" id="password1" require>
-                                <label for="" class="form-label">Confirmer votre mot de passe </label>
-                                <input type="password" name="passwordconfirm" class="form-control mb-4" id="password2" require>
-                                <div class="g-recaptcha mb-3" data-sitekey="6Lcu3ycpAAAAANZEg1MkZYaFZNDAxHVejwtFsW_a"></div>
-                                <button type="submit" class="btn btn-primary" name="creation">Créer mon compte</button>
-                            </div>
-                        </form>
-                    </details>
-                </div>
-            <?php } ?>
-        </section>
-    </main>
-
-    <!-- footer boostrap -->
-    <footer class="d-flex flex-wrap justify-content-between align-items-center mb-0 py-3 my-1 border-top" style="background-color: hsla(0, 0%, 94%, 80%);">
-        <div class="col-md-4 d-flex align-items-center my-3">
-            <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
-                <svg class="bi" width="30" height="24">
-                    <use xlink:href="#bootstrap" />
-                </svg>
-            </a>
-            <span class="mb-3 mb-md-0 text-muted">&copy; 2022 Germa-karrière.com</span>
-        </div>
-
-        <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-            <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24">
-                        <use xlink:href="#twitter" />
-                    </svg></a></li>
-            <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24">
-                        <use xlink:href="#instagram" />
-                    </svg></a></li>
-            <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24">
-                        <use xlink:href="#facebook" />
-                    </svg></a></li>
-        </ul>
-    </footer>
-
-    <!-- <script src="js/toggle.js"></script> -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-</body>
-
-</html>
