@@ -16,6 +16,7 @@ Le fichier **config.php** se trouve dans le chemain suivant :
 ---
 #### Configuration
 Changer les informations du **config.php**  
+  
     private $host = "127.0.0.1";  
     private $user = "root";  
     private $password = "root";  
