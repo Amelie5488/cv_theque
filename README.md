@@ -1,13 +1,13 @@
 # cv_theque
 
 #### Utilisaturs : 
-> Identifiant : damien@gmail.com
-> Mot de passe : 123456
-> Role : recruteur
+> Identifiant : damien@gmail.com  
+> Mot de passe : 123456  
+> Role : recruteur  
 ---
-> Identifiant : amelie@gmail.com
-> Mot de passe : 123456
-> Role : candidat (pas de profil créé à créer)
+> Identifiant : amelie@gmail.com  
+> Mot de passe : 123456  
+> Role : candidat (pas de profil créé à créer)  
 ---
 #### informations
 La table SQL est disponible pour importer toutes notre structure SQL.  
