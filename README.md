@@ -1,6 +1,6 @@
 # cv_theque
 
-#### Utilisaturs : 
+#### Utilisateurs : 
 > Identifiant : damien@gmail.com  
 > Mot de passe : 123456  
 > Role : recruteur  
