@@ -5,7 +5,7 @@ class CV
 
     private $host = "127.0.0.1";
     private $user = "root";
-    private $password = "";
+    private $password = "root";
     private $database = "cv_theq";
     private $charset = "utf8";
 
@@ -45,7 +45,7 @@ class CV
     // creation d'un compte sur l'index 
     public function insertUser($b = [])
     {
-        $sql = "INSERT into compte (Mail,Password,profil_id) values (:inputemail,:inputpassword,:inputId)";
+        $sql = "INSERT into compte (Mail,Password,profil_id,role) values (:inputemail,:inputpassword,:inputId,:roleDefault)";
         $done = $this->bdd->prepare($sql);
         $done->execute($b);
     }

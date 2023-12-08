@@ -1,16 +1,21 @@
 <?php
+
 //Démarre une nouvelle session 
 session_start();
 require_once('php/config/config.php');
 // connection a la bbd
 $CV = new CV();
 $CV->connexion();
+
+// Si la session connectée a le role 0 alors on renvoi sur la page candidat 
 if (isset($_SESSION['email']) == true && isset($_SESSION['role']) == 0) {
     header('location: candidats.php');
+
+// Si la session connectée a le role 1 alors on renvoi sur la page recruteur     
 } elseif (isset($_SESSION['email']) == true && isset($_SESSION['role']) == 1) {
     header('location: recruteurs.php');
 }
-// variable pour les alerte lors de la connection 
+// variable pour les alertes
 $error = "";
 $succes = "";
 
@@ -33,9 +38,14 @@ if (isset($_POST["connect"])) {
                 //le role de la session est identique au role de la BDD
                 $_SESSION["role"] = $requestDone["role"];
 
+        
+                // Si la session connecté a le role 0
                 if (isset($_SESSION['email']) == true && isset($_SESSION['role']) == 0) {
+                    //alors on renvoi sur la page candidats
                     header('location: candidats.php');
+                //Si la session connecté a le role 1
                 } elseif (isset($_SESSION['email']) == true && isset($_SESSION['role']) == 1) {
+                    // alors on renvoi sur la page recruteur 
                     header('location: recruteurs.php');
                 }
                 $CV->deco();
@@ -62,8 +72,8 @@ if (isset($_POST["creation"])) {
         //la fonction gettout prend tout mais de la table compte 
         $compte_OK = $CV->gettout(["inputMail" => $email]);
 
-
         // reCAPTCHA validation
+        // Si le Captcha est bien selectionné et si il est different de vide 
         if (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'])) {
 
             // Google secret API
@@ -73,16 +83,22 @@ if (isset($_POST["creation"])) {
             $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $secretAPIkey . '&response=' . $_POST['g-recaptcha-response']);
 
             // Decode JSON data
+            // renvoi un fichier Json
             $response = json_decode($verifyResponse);
+            //Si c'est un succes
             if ($response->success) {
                 if ($compte_OK < 1) {
+                    //Si le mot de passe est bon 
                     if ($_POST["passwordcreation"] == $_POST["passwordconfirm"]) {
+                        //Je lance la fonction insert user (création de compte)
                         if ($result > 0) {
-                            $requestDone = $CV->insertUser(["inputemail" => $email, "inputpassword" => $passHash, "inputId" => $result['Id']]);
+                            //Si le canndidat a deja un profil de créer alors on reprend l'id de son profil 
+                            $requestDone = $CV->insertUser(["inputemail" => $email, "inputpassword" => $passHash, "inputId" => $result['Id'], "roleDefault"=>"0"]);
                             $succes = "Création de votre compte validé";
                             $CV->deco();
                         } else {
-                            $requestDone = $CV->insertUser(["inputemail" => $email, "inputpassword" => $passHash, "inputId" => '0']);
+                            //Sinon on lui creer un compte avec l'ID 0 il devra creer son formulaire pour avoir son profil 
+                            $requestDone = $CV->insertUser(["inputemail" => $email, "inputpassword" => $passHash, "inputId" => '0', "roleDefault"=>"0"]);
                             $succes = "Création de votre compte validé";
                             $CV->deco();
                         }
@@ -136,6 +152,7 @@ if (isset($_POST["creation"])) {
                         <li>
                             <a href="index.php" class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Accueil</a>
                         </li>
+                        <!-- si il est connecté à une session et si son role est =1 (acces recruteur) alors j'affiche-->
                         <?php if (isset($_SESSION['email']) == true) { ?>
                             <?php if ($_SESSION['role'] == 1) { ?>
                                 <li>
@@ -242,6 +259,7 @@ if (isset($_POST["creation"])) {
 
     <!-- <script src="js/toggle.js"></script> -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>

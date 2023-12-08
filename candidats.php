@@ -26,7 +26,7 @@ if (isset($_POST["sauces"])) {
     } else {
         //un minimum de 5 competences a entrer et un maximum de 10 
         if (count($_POST['tags_new']) >= 5 && count($_POST['tags_new']) <= 10) {
-            //chemin
+            //chemin pour upload les cv
             $uploadDirectory = "uploads/";
 
             $errors = []; // Store errors here
@@ -44,7 +44,7 @@ if (isset($_POST["sauces"])) {
             $uploadPath = $uploadDirectory . $basename;
 
             if (!in_array($file_extension, $fileExtensionsAllowed)) {
-                $errors[] = "This file extension is not allowed. Please upload a JPEG or PNG file";
+                $errors[] = "Seul les fichiers PDF et DOCX sont autorisé";
             }
 
             if ($fileSize > 4000000) {
@@ -76,13 +76,6 @@ if (isset($_POST["sauces"])) {
                         //$i correspond au nombre de fois que je vais boucler c'est a dire à mon nombre de compétences que j'ai au total            
                         $requestInput = $CV->insertCompt($i, ["inputTag" => $_POST['tags_new'][$i], "monID" => $ID[0][0]]);
 
-                        //monNomCompt correspond au nom que j'entre dans tags_new (encart competences) fetch (dans la fonction) revoie 1 ou 0, 1 correspond a quelque chose d'existant donc si le nom tapé dans l'encart existe deja dans la table
-                        if ($CV->getCompetences(["monNomCompt" => $_POST['tags_new'][$i]]) > 0) {
-                            //Alors je lance la requete insertTAG j'ajoute à ma table competence les nouveau nom de comptétence
-                        } else {
-                            $requestDone = $CV->insertTag(["inputNom" => $_POST['tags_new'][$i]]);
-                            $CV->deco();
-                        }
                     }
                 } else {
                     $error = "erreur merci de contacter le tout puissant";
@@ -101,23 +94,28 @@ if (isset($_POST["sauces"])) {
 
 /// UPDATE INFO
 if (isset($_POST["sauces_profil"])) {
-
+    // Si les champs nom/prenom/email/adresse/telephone sont vide 
     if (empty($_POST["n1"] && $_POST["p1"] && $_POST["e1"] && $_POST["d1"] && $_POST["t1"])) {
         //alors alerte
         $error =  "Certains champs sont vide";
         //sinon
     } else {
-        $result = $CV->gettout(["inputMail" => $_SESSION['email']]);
 
-        $tagsTab = explode(",", $_POST['Mytags']);
-        $tab_replace = ['{', '"', 'value', ':', '}', '[', ']'];
-        $tagsTab = str_replace($tab_replace, "", $tagsTab);
-        for ($i = 9; $i >= count($tagsTab); $i--) {
+        $result = $CV->gettout(["inputMail" => $_SESSION['email']]);
+        // creation de tag 
+        $tagsTab = explode(",", $_POST['Mytags']);  // le renvoi sous forme de tableau
+        $tab_replace = ['{', '"', 'value', ':', '}', '[', ']']; // retire le mot value 
+        $tagsTab = str_replace($tab_replace, "", $tagsTab); // le remplace par vide 
+        // mise a jour des competence et insertion quand une competence n'existe pas dans la base 
+        // deux boucles sont neccessaire car il met a jour le nombre de competence quand on en supprime une mais aussi quand on en ajoute une
+        // la premiere boucle part des 9 competences la seconde part de zero meme si nous ajoutons ou supprimons une competence avec count($tagsTab) il sait combien de competence il doit parcourir 
+
+        for ($i = 9; $i >= count($tagsTab); $i--) { 
             $requestInput = $CV->insertCompt($i, ["inputTag" => "", "monID" => $result['profil_id']]);
         }
         for ($i = 0; $i < count($tagsTab); $i++) {
             //création requete "UPDATE tablename SET Competence_$v = :inputTag$i where Id = :monID" => modif de la ligne -- id de la copetence est egal a l'id du tag -- ou l'id de la table est egal à l'ID de l'input
-            //nous avons mis deux parametres dans la fonction ici $i / ["inputTag$i" => $_POST['tags_new'][$i], "monID" => $ID[0][0]] inputTag coorespond a ce qui a été entré dans l'encart nommé compétence (ex:Anglais) => le post correspond a ce que je recupere de l'encart nommé compétence donc les deux veulent dire la meme chose sauf que pour une question de sécurité je dois le nommer differement dans ma requete sql (:input)
+            //nous avons mis deux parametres dans la fonction ici $i / ["inputTag$i" => $_POST['tags_new'][$i], "monID" => profil_id inputTag coorespond a ce qui a été entré dans l'encart nommé compétence (ex:Anglais) => le post correspond a ce que je recupere de l'encart nommé compétence donc les deux veulent dire la meme chose sauf que pour une question de sécurité je dois le nommer differement dans ma requete sql (:input)
             //$i correspond au nombre de fois que je vais boucler c'est a dire à mon nombre de compétences que j'ai au total 
             $requestInput = $CV->insertCompt($i, ["inputTag" => $tagsTab[$i], "monID" => $result['profil_id']]);
 
@@ -128,6 +126,7 @@ if (isset($_POST["sauces_profil"])) {
                 $requestDone = $CV->insertTag(["inputNom" =>  $tagsTab[$i]]);
             }
         }
+        // calcul de l'age 
         $today = getdate();
         $annee = explode('-', $_POST["d1"]);
         $firstString = $annee[0];
@@ -142,7 +141,7 @@ if (isset($_POST['upCV'])) {
 
     $errors = []; // Store errors here
 
-    $fileExtensionsAllowed = ['pdf']; // extension 
+    $fileExtensionsAllowed = ['pdf', 'docx']; // extension 
 
     $filename   = uniqid() . "-" . time(); // 5dab1961e93a7-1571494241
     $fileSize = $_FILES['monCV']['size'];

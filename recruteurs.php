@@ -6,6 +6,8 @@ require_once('php/config/config.php');
 // connection a la bbd
 $CV = new CV();
 $CV->connexion();
+
+// si le role de la session est de zero (pas d'acces autorisé pour la page recruteur) on renvoi vers la page candidat
 if ($_SESSION["role"] == 0) {
     header("Location:candidats.php");
 }
@@ -19,6 +21,7 @@ if (isset($_POST["sauces"])) {
     } else {
         //un minimum de 5 competences a entrer et un maximum de 10 
         if (count($_POST['tags_new']) >= 5 && count($_POST['tags_new']) <= 10) {
+            //Calcul de l'age
             $today = getdate();
             $annee = explode('-', $_POST["naissance"]);
             $firstString = $annee[0];
@@ -53,12 +56,7 @@ if (isset($_POST["sauces"])) {
                 //nous avons mis deux parametres dans la fonction ici $i / ["inputTag$i" => $_POST['tags_new'][$i], "monID" => $ID[0][0]] inputTag coorespond a ce qui a été entré dans l'encart nommé compétence (ex:Anglais) => le post correspond a ce que je recupere de l'encart nommé compétence donc les deux veulent dire la meme chose sauf que pour une question de sécurité je dois le nommer differement dans ma requete sql (:input)
                 //$i correspond au nombre de fois que je vais boucler c'est a dire à mon nombre de compétences que j'ai au total            
                 $requestInput = $CV->insertCompt($i, ["inputTag" => $_POST['tags_new'][$i], "monID" => $ID[0][0]]);
-                //monNomCompt correspond au nom que j'entre dans tags_New (encart competences) fetch (dans la fonction) revoie 1 ou 0, 1 correspond a quelque chose d'existant donc si le nom tapé dans l'encart existe deja dans la table
-                if ($CV->getCompetences(["monNomCompt" => $_POST['tags_new'][$i]]) > 0) {
-                    //Alors je lance la requete insertTAG j'ajoute à ma table competence les nouveau nom de comptétence
-                } else {
-                    $requestDone = $CV->insertTag(["inputNom" => $_POST['tags_new'][$i]]);
-                }
+
             }
             $succes ="Bienvenue chez Germa-Karrière, votre compte à bien été créé pour gérer votre carrière"; 
         } else {
@@ -290,9 +288,9 @@ if (isset($_POST["sauces"])) {
                     foreach ($touslescandidats as $row) {
 
                     ?>
-                        <tr>
+                        <tr data-modal-target="authentication-modal_<?php print $row['Id'] ?>">
                             <td class="border-b border-black/50"> 
-                                <button type="button" class="w-full text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900" name="Modif <?= $row["Id"]; ?>" data-modal-target="authentication-modal<?php print $row['Id'] ?>" data-modal-toggle="authentication-modal<?php print $row['Id'] ?>"> Modifier</button>
+                                <button type="button" class="w-full text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900" name="Modif <?= $row["Id"]; ?>" data-modal-target="authentication-modal_<?php print $row['Id'] ?>" data-modal-show="authentication-modal_<?php print $row['Id'] ?>"> Modifier</button>
                                 <form method="post">
                                     <button type="submit" class="w-full text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900" name="Supprimer<?= $row["Id"]; ?>"> Supprimer</button>
                                 </form>
@@ -325,7 +323,7 @@ if (isset($_POST["sauces"])) {
                         <!-- Modal pour modifier chaque candidiat -->
 
                         <!-- Main modal -->
-                        <div id="authentication-modal<?php print $row['Id'] ?>" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div id="authentication-modal_<?php print $row['Id'] ?>" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                             <div class="relative w-full max-w-4xl max-h-full">
                                 <!-- Modal content -->
                                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -334,7 +332,7 @@ if (isset($_POST["sauces"])) {
                                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                                             Modifier un candidat
                                         </h3>
-                                        <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal<?php print $row['Id'] ?>">
+                                        <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal_<?php print $row['Id'] ?>">
                                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                             </svg>
