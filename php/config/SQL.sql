@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 08 déc. 2023 à 08:27
+-- Généré le : ven. 08 déc. 2023 à 09:07
 -- Version du serveur : 8.0.35
 -- Version de PHP : 8.0.26
 
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `compte` (
 
 INSERT INTO `compte` (`id_compte`, `Mail`, `Password`, `profil_id`, `role`) VALUES
 (1, 'damien@gmail.com', '$argon2id$v=19$m=65536,t=4,p=1$a1g5UjNhOTd3Z2R5WVh0cw$2ZQWHRIy2ridSBZpGPDOstHm1wrxuaL0zRbtLXWSR/4', 0, 1),
-(2, 'amelie@gmail.com', '$argon2id$v=19$m=65536,t=4,p=1$dUlCbmpaYzBLU012dU15Yg$4gzCTD8m9x7SS9FXWdryYKC9I65PbiMdFqiczDfeaNc', 15, 0);
+(2, 'amelie@gmail.com', '$argon2id$v=19$m=65536,t=4,p=1$dUlCbmpaYzBLU012dU15Yg$4gzCTD8m9x7SS9FXWdryYKC9I65PbiMdFqiczDfeaNc', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -155,20 +155,19 @@ CREATE TABLE IF NOT EXISTS `tablename` (
 --
 
 INSERT INTO `tablename` (`Id`, `Nom`, `Prenom`, `Age`, `Date_naissance`, `Adresse`, `Adresse_1`, `Code_postal`, `ville`, `tel_portable`, `tel_fixe`, `Email`, `Profil`, `Competence_1`, `Competence_2`, `Competence_3`, `Competence_4`, `Competence_5`, `Competence_6`, `Competence_7`, `Competence_8`, `Competence_9`, `Competence_10`, `Site_Web`, `Profil_Linkedin`, `Profil_Viadeo`, `Profil_facebook`, `CV`) VALUES
-(1, 'TAMARIN', 'Margaux', NULL, '10/10/1965', NULL, NULL, NULL, NULL, 2147483647, NULL, 'marg.tamarin@gmail.com', 'Import/Export', 'Marketing de contenu', 'Stratégie de social media', 'Webmarketing', 'Storytelling', 'Analytics', 'Rédaction', 'Anglais', NULL, NULL, NULL, 'www.margauxtamarin.com', NULL, NULL, NULL, ''),
-(2, 'MARVELLA', 'Claudia', NULL, '06/10/1990', NULL, NULL, NULL, 'GRENOBLE', 2147483647, NULL, 'claudia.marvella@hotmail.com', 'Digital Manager', 'Adaptation', 'Créativité', 'Leadership', 'Communication', 'Dynamisme', 'Médias sociaux', 'Prestashop', 'E-commerce', 'Salesforce', 'Commerce International', NULL, NULL, NULL, NULL, ''),
-(3, 'ANIS', 'Nouri', NULL, '08/07/1993', 'Argoub Ezaatar Medjez', NULL, '9070', 'El Beb', 2147483647, NULL, 'nourianis1991@gmail.com', 'Technicien réseaux', 'Windows', 'Linux', 'Réseaux', 'Français', 'Anglais', 'Arabe', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
-(4, 'MARTIN', 'Michel', NULL, '04/09/1978', '320 avenue de la Liberté', 'apt 7B', '75000', 'Paris', 600000000, '0100000000', 'michel.martin@primocv.com', 'Cadre commercial', 'Commerce', 'Bureautique', 'Anglais', 'Espagnol', NULL, NULL, NULL, NULL, NULL, NULL, 'www.monsite.com', NULL, NULL, NULL, ''),
-(5, 'GIRAUD', 'Pierre', NULL, '25/01/1990', 'Impasse des Acacias', NULL, '83200', 'Toulon', 2147483647, NULL, 'pierre.giraud@edhec.com', 'Management', 'Bureautique', 'Anglais', 'Management', 'Infographie', 'Développement Web', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
-(6, 'MOREAU', 'Mélanie', NULL, '24/02/1975', NULL, NULL, NULL, 'PARIS', 2147483647, NULL, 'melaniemoreau@gmail.com', 'Responsable du Service Client', 'Bureautique', 'Anglais', 'Français', 'Espagnol', 'CRM', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
-(7, 'BOUTEILLER', 'Fanny', NULL, '03/09/1986', NULL, NULL, NULL, NULL, 688179934, NULL, 'fanny.bouteiller@gmail.com', 'Réalisatrice Rédactrice', 'Maîtrise Caméras', 'Montage', 'Anglais', 'Français', 'Belge', NULL, NULL, NULL, NULL, NULL, 'https://fannybouteiller.wordpress.com', NULL, NULL, NULL, ''),
-(8, 'CHERET', 'Laurent', '35', '26/07/1976', '8 impasse du Languedoc', NULL, 'F-57525', 'TALANGE', 664964404, '0387804868', 'laurent.cheret@yahoo.fr', 'Journaliste', 'Anglais', 'Allemand', 'Service client', 'Communication', 'BToB', 'BToC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
-(10, 'QUEVAL PAROLA', 'Sophie', '26', '01/04/1990', '22 rue fodéré', NULL, '06300', 'NICE', 6, NULL, 'sophie.queval@gmail.com', 'Communication - Marketing', 'Communication Interne', 'Communication Externe', 'Communication Institutionelle', 'Relations Presse', NULL, NULL, NULL, NULL, NULL, NULL, 'sophiequevalparola.wordpress.com', NULL, NULL, NULL, ''),
-(11, 'LAGARDERE', 'Alfred', NULL, '03/03/1975', NULL, NULL, NULL, 'PARIS', 2147483647, NULL, 'marinelagard@gmail.com', 'Français', 'Anglais', 'Espagnol', 'Italien', 'CRM', 'Bureautique', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
-(12, 'LEVEQUE', 'Emile', NULL, '13/11/1990', '84 rue du Bas-Coudray', NULL, '91100', 'CORBEIL-ESSONNES', 674928161, NULL, 'leveque.emile@live.fr', 'Communication', 'Anglais', 'PAO', 'Montage', 'Bureautique', 'Communication', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
-(13, 'FARRÉ', 'Aladin', '24', '13/03/1992', '3 rue du lieutenant Chauré', NULL, '75020', 'PARIS', 684944836, NULL, 'aladinfarre@gmail.com', 'Ingénieur Audiovisuel', 'Anglais', 'Montage', 'Maîtrise Caméras', 'Allemand', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
-(14, 'GUIOT', 'Laura', '25', '14/02/1991', NULL, NULL, NULL, 'BRUXELLES', 2147483647, NULL, 'lauraguiot@gmail.com', 'Editrice Web', 'Communication', 'Anglais', 'Français', 'Néerlandais', 'Social Médias', 'Rédaction', 'Wordpress', NULL, NULL, NULL, 'jefaisdubruit.com', NULL, NULL, NULL, ''),
-(15, 'Leroy', 'Amélie', '30', '1993-02-17', 'Adresse 1', 'Adresse 2', '55190', 'Nancy', 600000000, '', 'amelie@gmail.com', 'Marketing', 'Marketing de contenu', 'Commerce', 'Bureautique', 'Communication', 'Créativité', 'Webmarketing', '', '', '', '', 'https://amelie.fr', '', '', '', '');
+(1, 'TAMARIN', 'Margaux', NULL, '1965-10-10', NULL, NULL, NULL, NULL, 2147483647, NULL, 'marg.tamarin@gmail.com', 'Import/Export', 'Marketing de contenu', 'Stratégie de social media', 'Webmarketing', 'Storytelling', 'Analytics', 'Rédaction', 'Anglais', NULL, NULL, NULL, 'www.margauxtamarin.com', NULL, NULL, NULL, ''),
+(2, 'MARVELLA', 'Claudia', NULL, '1990-10-06', NULL, NULL, NULL, 'GRENOBLE', 2147483647, NULL, 'claudia.marvella@hotmail.com', 'Digital Manager', 'Adaptation', 'Créativité', 'Leadership', 'Communication', 'Dynamisme', 'Médias sociaux', 'Prestashop', 'E-commerce', 'Salesforce', 'Commerce International', NULL, NULL, NULL, NULL, ''),
+(3, 'ANIS', 'Nouri', NULL, '1993-07-08', 'Argoub Ezaatar Medjez', NULL, '9070', 'El Beb', 2147483647, NULL, 'nourianis1991@gmail.com', 'Technicien réseaux', 'Windows', 'Linux', 'Réseaux', 'Français', 'Anglais', 'Arabe', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
+(4, 'MARTIN', 'Michel', NULL, '1978-09-04', '320 avenue de la Liberté', 'apt 7B', '75000', 'Paris', 600000000, '0100000000', 'michel.martin@primocv.com', 'Cadre commercial', 'Commerce', 'Bureautique', 'Anglais', 'Espagnol', NULL, NULL, NULL, NULL, NULL, NULL, 'www.monsite.com', NULL, NULL, NULL, ''),
+(5, 'GIRAUD', 'Pierre', NULL, '1990-01-25', 'Impasse des Acacias', NULL, '83200', 'Toulon', 2147483647, NULL, 'pierre.giraud@edhec.com', 'Management', 'Bureautique', 'Anglais', 'Management', 'Infographie', 'Développement Web', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
+(6, 'MOREAU', 'Mélanie', NULL, '1975-02-24', NULL, NULL, NULL, 'PARIS', 2147483647, NULL, 'melaniemoreau@gmail.com', 'Responsable du Service Client', 'Bureautique', 'Anglais', 'Français', 'Espagnol', 'CRM', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
+(7, 'BOUTEILLER', 'Fanny', NULL, '1986-09-03', NULL, NULL, NULL, NULL, 688179934, NULL, 'fanny.bouteiller@gmail.com', 'Réalisatrice Rédactrice', 'Maîtrise Caméras', 'Montage', 'Anglais', 'Français', 'Belge', NULL, NULL, NULL, NULL, NULL, 'https://fannybouteiller.wordpress.com', NULL, NULL, NULL, ''),
+(8, 'CHERET', 'Laurent', '35', '1976-07-26', '8 impasse du Languedoc', NULL, 'F-57525', 'TALANGE', 664964404, '0387804868', 'laurent.cheret@yahoo.fr', 'Journaliste', 'Anglais', 'Allemand', 'Service client', 'Communication', 'BToB', 'BToC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
+(10, 'QUEVAL PAROLA', 'Sophie', '26', '1990-04-01', '22 rue fodéré', NULL, '06300', 'NICE', 6, NULL, 'sophie.queval@gmail.com', 'Communication - Marketing', 'Communication Interne', 'Communication Externe', 'Communication Institutionelle', 'Relations Presse', NULL, NULL, NULL, NULL, NULL, NULL, 'sophiequevalparola.wordpress.com', NULL, NULL, NULL, ''),
+(11, 'LAGARDERE', 'Alfred', NULL, '1975-03-03', NULL, NULL, NULL, 'PARIS', 2147483647, NULL, 'marinelagard@gmail.com', 'Français', 'Anglais', 'Espagnol', 'Italien', 'CRM', 'Bureautique', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
+(12, 'LEVEQUE', 'Emile', NULL, '1990-11-13', '84 rue du Bas-Coudray', NULL, '91100', 'CORBEIL-ESSONNES', 674928161, NULL, 'leveque.emile@live.fr', 'Communication', 'Anglais', 'PAO', 'Montage', 'Bureautique', 'Communication', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
+(13, 'FARRÉ', 'Aladin', '24', '1992-03-13', '3 rue du lieutenant Chauré', NULL, '75020', 'PARIS', 684944836, NULL, 'aladinfarre@gmail.com', 'Ingénieur Audiovisuel', 'Anglais', 'Montage', 'Maîtrise Caméras', 'Allemand', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ''),
+(14, 'GUIOT', 'Laura', '25', '1991-02-14', NULL, NULL, NULL, 'BRUXELLES', 2147483647, NULL, 'lauraguiot@gmail.com', 'Editrice Web', 'Communication', 'Anglais', 'Français', 'Néerlandais', 'Social Médias', 'Rédaction', 'Wordpress', NULL, NULL, NULL, 'jefaisdubruit.com', NULL, NULL, NULL, '');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
