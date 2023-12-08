@@ -7,7 +7,7 @@
 ---
 > Identifiant : amelie@gmail.com  
 > Mot de passe : 123456  
-> Role : candidat (pas de profil créé à créer)  
+> Role : candidat (pas de profil créé, il faut le créer)  
 ---
 #### informations
 La table SQL est disponible pour importer toutes notre structure SQL.  
