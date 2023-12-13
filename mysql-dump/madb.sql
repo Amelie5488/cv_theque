@@ -19,8 +19,8 @@ SET time_zone = "+00:00";
 
 --
 -- Base de données : `cv_theq`
---
-CREATE DATABASE cv_theq;
+-- --
+-- CREATE DATABASE cv_theq;
 USE cv_theq;
 
 -- --------------------------------------------------------
@@ -29,8 +29,8 @@ USE cv_theq;
 -- Structure de la table `competences`
 --
 
-DROP TABLE IF EXISTS `competences`;
-CREATE TABLE IF NOT EXISTS `competences` (
+DROP TABLE IF EXISTS `cv_theq.competences`;
+CREATE TABLE IF NOT EXISTS `cv_theq.competences` (
   `id_comp` bigint NOT NULL AUTO_INCREMENT,
   `Nom` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`id_comp`)
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `competences` (
 -- Déchargement des données de la table `competences`
 --
 
-INSERT INTO `competences` (`id_comp`, `Nom`) VALUES
+INSERT INTO `cv_theq.competences` (`id_comp`, `Nom`) VALUES
 (1, 'Anglais'),
 (2, 'Marketing de contenu'),
 (3, 'Adaptation'),
@@ -94,8 +94,8 @@ INSERT INTO `competences` (`id_comp`, `Nom`) VALUES
 -- Structure de la table `compte`
 --
 
-DROP TABLE IF EXISTS `compte`;
-CREATE TABLE IF NOT EXISTS `compte` (
+DROP TABLE IF EXISTS `cv_theq.compte`;
+CREATE TABLE IF NOT EXISTS `cv_theq.compte` (
   `id_compte` bigint NOT NULL AUTO_INCREMENT,
   `Mail` text NOT NULL,
   `Password` text NOT NULL,
@@ -119,8 +119,8 @@ INSERT INTO `compte` (`id_compte`, `Mail`, `Password`, `profil_id`, `role`) VALU
 -- Structure de la table `tablename`
 --
 
-DROP TABLE IF EXISTS `tablename`;
-CREATE TABLE IF NOT EXISTS `tablename` (
+DROP TABLE IF EXISTS `cv_theq.tablename`;
+CREATE TABLE IF NOT EXISTS `cv_theq.tablename` (
   `Id` bigint NOT NULL AUTO_INCREMENT,
   `Nom` varchar(512) DEFAULT NULL,
   `Prenom` varchar(512) DEFAULT NULL,
