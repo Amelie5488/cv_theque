@@ -3,9 +3,6 @@ version: '3.8'
 services:
   app:
     image: arkunis/cv_theq
-    build:
-      context: ./my-php-app
-      dockerfile: Dockerfile
     ports:
       - "8081:80"
     volumes:
