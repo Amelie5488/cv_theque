@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: cv_theq
+    image: arkunis/cv_theq
     build:
       context: ./my-php-app
       dockerfile: Dockerfile
