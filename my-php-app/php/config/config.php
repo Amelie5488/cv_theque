@@ -2,10 +2,9 @@
 
 class CV
 {
-
-    private $host = "127.0.0.1";
+    private $host = "db";
     private $user = "root";
-    private $password = "root";
+    private $password = "";
     private $database = "cv_theq";
     private $charset = "utf8";
 

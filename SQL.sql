@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `cv_theq`
 --
+CREATE DATABASE cv_theq;
+USE cv_theq;
 
 -- --------------------------------------------------------
 
@@ -32,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `competences` (
   `id_comp` bigint NOT NULL AUTO_INCREMENT,
   `Nom` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`id_comp`)
-) ENGINE=MyISAM AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB  AUTO_INCREMENT=48 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Déchargement des données de la table `competences`
@@ -101,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `compte` (
   `role` bigint NOT NULL,
   PRIMARY KEY (`id_compte`),
   KEY `compte_profil_id_foreign` (`profil_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Déchargement des données de la table `compte`
@@ -148,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `tablename` (
   `Profil_facebook` varchar(512) DEFAULT NULL,
   `CV` text NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB  AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Déchargement des données de la table `tablename`
