@@ -5,8 +5,6 @@ services:
     image: arkunis/cv_theq
     ports:
       - "8081:80"
-    volumes:
-      - ./my-php-app:/var/www/html
     depends_on:
       - db
 
